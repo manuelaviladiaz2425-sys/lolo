@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -42,6 +41,37 @@
             opacity: 0.9;
         }
 
+        .qr-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .qr-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .share-link {
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            word-break: break-all;
+            font-size: 0.9em;
+            color: #666;
+        }
+
         .tabs {
             display: flex;
             gap: 10px;
@@ -51,7 +81,7 @@
 
         .tab-button {
             flex: 1;
-            min-width: 140px;
+            min-width: 150px;
             padding: 15px;
             background: white;
             border: none;
@@ -240,47 +270,6 @@
             margin-bottom: 10px;
         }
 
-        .dating-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ff6b9d;
-        }
-
-        .dating-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            color: #666;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .dating-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            background: #ff6b9d;
-            color: white;
-            border-radius: 20px;
-            font-size: 0.85em;
-        }
-
-        .dating-description {
-            color: #333;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .dating-info {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            font-size: 0.9em;
-            color: #666;
-        }
-
         .poll-card {
             background: #f8f9fa;
             padding: 20px;
@@ -386,11 +375,17 @@
             <p>Consejo de Medellín - Comparte de forma anónima</p>
         </header>
 
+        <!-- Sección QR -->
+        <div class="qr-section">
+            <h3>📱 Comparte esta página</h3>
+            <div id="qrcode"></div>
+            <div class="share-link" id="shareLink">https://manuelaviladiaz2425-sys.github.io/lolo/</div>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Escanea el código QR o comparte el enlace</p>
+        </div>
+
         <div class="tabs">
             <button class="tab-button active" onclick="switchTab('enviar')">✍️ Confesión</button>
             <button class="tab-button" onclick="switchTab('ver')">👀 Ver Confesiones</button>
-            <button class="tab-button" onclick="switchTab('busco-novio')">💕 Busco Novi@</button>
-            <button class="tab-button" onclick="switchTab('ver-busquedas')">👫 Ver Búsquedas</button>
             <button class="tab-button" onclick="switchTab('crear-encuesta')">➕ Crear Encuesta</button>
             <button class="tab-button" onclick="switchTab('encuestas')">📊 Encuestas</button>
         </div>
@@ -459,46 +454,6 @@
             </div>
         </div>
 
-        <!-- Tab: Busco Novi@ -->
-        <div id="busco-novio" class="tab-content">
-            <div class="card">
-                <h2 style="margin-bottom: 20px; color: #333;">💕 Busco Novi@</h2>
-                <p style="margin-bottom: 20px; color: #666;">Publica tu búsqueda de forma anónima</p>
-                <form id="datingForm">
-                    <div class="form-group">
-                        <label>Busco:</label>
-                        <select id="lookingFor" required>
-                            <option value="">Selecciona...</option>
-                            <option value="Novio">👦 Novio</option>
-                            <option value="Novia">👧 Novia</option>
-                            <option value="Novi@">💑 Novi@ (cualquiera)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Edad que busco:</label>
-                        <input type="text" id="ageRange" placeholder="Ej: 14-16 años" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Grado:</label>
-                        <input type="text" id="grade" placeholder="Ej: 8-5, 9-3, etc." required>
-                    </div>
-                    <div class="form-group">
-                        <label>Descripción (qué buscas, tus gustos, etc.):</label>
-                        <textarea id="description" placeholder="Cuéntanos qué tipo de persona buscas, tus intereses, hobbies..." required></textarea>
-                    </div>
-                    <button type="submit">Publicar Búsqueda 💘</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Tab: Ver Búsquedas -->
-        <div id="ver-busquedas" class="tab-content">
-            <div class="card">
-                <h2 style="margin-bottom: 20px; color: #333;">👫 Búsquedas activas</h2>
-                <div id="datingList"></div>
-            </div>
-        </div>
-
         <!-- Tab: Crear Encuesta -->
         <div id="crear-encuesta" class="tab-content">
             <div class="card">
@@ -534,7 +489,25 @@
         </div>
     </div>
 
+    <!-- Librería para generar QR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
+        // Generar código QR con la URL correcta
+        window.addEventListener('load', function() {
+            const currentUrl = "https://manuelaviladiaz2425-sys.github.io/lolo/";
+            document.getElementById('shareLink').textContent = currentUrl;
+            
+            new QRCode(document.getElementById("qrcode"), {
+                text: currentUrl,
+                width: 200,
+                height: 200,
+                colorDark: "#667eea",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        });
+
         // Cambiar entre tabs
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -550,8 +523,6 @@
                 loadConfessions();
             } else if (tabName === 'encuestas') {
                 loadPolls();
-            } else if (tabName === 'ver-busquedas') {
-                loadDatingPosts();
             }
         }
 
@@ -577,57 +548,6 @@
             alert('¡Tu confesión ha sido enviada de forma anónima! 🎉');
             document.getElementById('confessionForm').reset();
         });
-
-        // Enviar búsqueda de novi@
-        document.getElementById('datingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const lookingFor = document.getElementById('lookingFor').value;
-            const ageRange = document.getElementById('ageRange').value;
-            const grade = document.getElementById('grade').value;
-            const description = document.getElementById('description').value;
-            
-            const datingPost = {
-                id: Date.now(),
-                lookingFor: lookingFor,
-                ageRange: ageRange,
-                grade: grade,
-                description: description,
-                date: new Date().toLocaleString('es-CO')
-            };
-            
-            let datingPosts = JSON.parse(localStorage.getItem('datingPosts') || '[]');
-            datingPosts.unshift(datingPost);
-            localStorage.setItem('datingPosts', JSON.stringify(datingPosts));
-            
-            alert('¡Tu búsqueda ha sido publicada! 💕');
-            document.getElementById('datingForm').reset();
-        });
-
-        // Cargar búsquedas de novi@
-        function loadDatingPosts() {
-            const datingPosts = JSON.parse(localStorage.getItem('datingPosts') || '[]');
-            const container = document.getElementById('datingList');
-            
-            if (datingPosts.length === 0) {
-                container.innerHTML = '<div class="empty-state"><p>💔 No hay búsquedas aún. ¡Sé el primero en publicar!</p></div>';
-                return;
-            }
-            
-            container.innerHTML = datingPosts.map(post => `
-                <div class="dating-card">
-                    <div class="dating-header">
-                        <span class="dating-badge">Busco ${post.lookingFor}</span>
-                        <span>${post.date}</span>
-                    </div>
-                    <div class="dating-info">
-                        <span>📅 Edad: ${post.ageRange}</span>
-                        <span>📚 Grado: ${post.grade}</span>
-                    </div>
-                    <div class="dating-description" style="margin-top: 15px;">${post.description}</div>
-                </div>
-            `).join('');
-        }
 
         // Mostrar/ocultar formulario de respuesta
         function toggleReplyForm(confessionId) {
@@ -814,4 +734,36 @@
                             <h3 style="color: #333; margin-bottom: 15px;">${poll.question}</h3>
                             <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">Publicada: ${poll.date}</p>
                             <form onsubmit="votePoll(event, ${poll.id})">
-                                ${poll.options.map((opt, idx) =>
+                                ${poll.options.map((opt, idx) => `
+                                    <div class="poll-option">
+                                        <input type="radio" name="poll_${poll.id}" value="${opt}" id="poll_${poll.id}_opt${idx}" required>
+                                        <label for="poll_${poll.id}_opt${idx}" style="display: inline; cursor: pointer;">${opt}</label>
+                                    </div>
+                                `).join('')}
+                                <button type="submit" class="btn vote-btn">Votar 🗳️</button>
+                            </form>
+                        </div>
+                    `;
+                }
+            }).join('');
+        }
+
+        // Votar en encuesta
+        function votePoll(event, pollId) {
+            event.preventDefault();
+            
+            const selected = document.querySelector(`input[name="poll_${pollId}"]:checked`).value;
+            
+            let polls = JSON.parse(localStorage.getItem('polls') || '[]');
+            const poll = polls.find(p => p.id === pollId);
+            
+            if (poll) {
+                poll.votes[selected] = (poll.votes[selected] || 0) + 1;
+                localStorage.setItem('polls', JSON.stringify(polls));
+                localStorage.setItem(`voted_${pollId}`, 'true');
+                loadPolls();
+            }
+        }
+    </script>
+</body>
+</html>
